@@ -3,7 +3,7 @@ window.componentsLoadedPromise = Promise.all([
     .then((response) => response.text())
     .then((html) => {
       document.getElementById("navbar").innerHTML = html;
-      initNavbar();
+      // initNavbar();
     }),
   fetch("components/footer.html")
   .then(res => res.text())
@@ -17,7 +17,6 @@ window.componentsLoadedPromise = Promise.all([
     .then((response) => response.text())
     .then((html) => {
       document.getElementById("social-bar").innerHTML = html;
-      initSocialBar();
     }),
 ]);
 

@@ -307,18 +307,98 @@ gsap.from(".contact-left .accent", {
   ease: "back.out(1.7)"
 });
 
-const map = document.querySelector(".contact-map img");
+window.addEventListener("componentsLoaded", () => {
 
-if (map) {
-  document.addEventListener("mousemove", (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5);
-    const y = (e.clientY / window.innerHeight - 0.5);
-
-    gsap.to(map, {
-      x: x * 15,
-      y: y * 10,
-      duration: 0.6,
-      ease: "power2.out"
+  // ✅ INIT EMAILJS SAFELY
+  if (window.emailjs) {
+    emailjs.init({
+      publicKey: "kqWvRTv5kjhFqNabg"
     });
+  } else {
+    console.error("EmailJS not loaded");
+    return;
+  }
+
+  // ✅ SAFE FORM SELECT
+  const form = document.getElementById("contactForm");
+  if (!form) return; // 🔥 THIS LINE FIXES EVERYTHING
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let isValid = true;
+
+    const name = document.getElementById("name");
+    const email = document.getElementById("email");
+    const subject = document.getElementById("subject");
+    const message = document.getElementById("message");
+
+    const nameError = document.getElementById("nameError");
+    const emailError = document.getElementById("emailError");
+    const messageError = document.getElementById("messageError");
+
+    // RESET
+    [name, email, message].forEach(el => {
+      el.classList.remove("error-input");
+    });
+
+    nameError.textContent = "";
+    emailError.textContent = "";
+    messageError.textContent = "";
+
+    // VALIDATION
+    if (name.value.trim() === "") {
+      nameError.textContent = "Please enter your name";
+      name.classList.add("error-input");
+      isValid = false;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email.value)) {
+      emailError.textContent = "Please enter a valid email";
+      email.classList.add("error-input");
+      isValid = false;
+    }
+
+    if (message.value.trim() === "") {
+      messageError.textContent = "Please enter your message";
+      message.classList.add("error-input");
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    const btn = form.querySelector("button");
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+
+    // emailjs.send("service_ha0zfah", "template_ly32lim", {
+    //   name: name.value,
+    //   email: email.value,
+    //   subject: subject.value,
+    //   message: message.value
+    // })
+    emailjs.send("service_yowfb68", "template_c481o32", {
+      name: name.value,
+      email: email.value,
+      subject: subject.value,
+      message: message.value
+    })
+    .then(() => {
+      alert("Message sent successfully!");
+      form.reset();
+    })
+    
+    .catch((err) => {
+      console.error(err);
+      alert("Failed to send message");
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.innerHTML = 'Send a Message <span class="arrow-icon">→</span>';
+    });
+
   });
-}
+
+});

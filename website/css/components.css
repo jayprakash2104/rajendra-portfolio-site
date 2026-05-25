@@ -718,7 +718,7 @@ textarea {
 input.error-input,
 textarea.error-input {
   border-color: #ff4d4f;
-  background: #fff6f6;
+  /* background: #fff6f6; */
 }
 
 @media (max-width: 992px) {
