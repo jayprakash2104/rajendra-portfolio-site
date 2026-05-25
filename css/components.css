@@ -716,9 +716,39 @@ textarea {
 
 /* input error highlight */
 input.error-input,
-textarea.error-input {
-  border-color: #ff4d4f;
-  /* background: #fff6f6; */
+textarea.error-input,
+select.error-input {
+  border-color: #ff4d4f!important;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #ffffff63;
+  font-size: 14px;
+  font-family: inherit;
+  color: #aaa;
+
+  outline: none;
+  appearance: none; /* remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.form-group select.selected {
+  color: var(--text-dark); /* your normal text color */
+}
+
+/* HOVER + FOCUS */
+.form-group select:focus {
+  border-color: var(--accent);
+  background: #ffffff63;
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
 }
 
 @media (max-width: 992px) {

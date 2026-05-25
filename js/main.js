@@ -307,12 +307,26 @@ gsap.from(".contact-left .accent", {
   ease: "back.out(1.7)"
 });
 
+const reason = document.getElementById("reason");
+if (reason) {
+  console.log("Reason select found, adding change listener");
+    reason.addEventListener("change", function () {
+      if (this.value !== "") {
+        this.classList.add("selected");
+      } else {
+        this.classList.remove("selected");
+      }
+    });
+  }
+
+
 window.addEventListener("componentsLoaded", () => {
 
   // ✅ INIT EMAILJS SAFELY
   if (window.emailjs) {
     emailjs.init({
-      publicKey: "kqWvRTv5kjhFqNabg"
+      // publicKey: "kqWvRTv5kjhFqNabg"
+      publicKey: "SJduZE3sdYqaQywdp"
     });
   } else {
     console.error("EmailJS not loaded");
@@ -332,19 +346,22 @@ window.addEventListener("componentsLoaded", () => {
     const email = document.getElementById("email");
     const subject = document.getElementById("subject");
     const message = document.getElementById("message");
+    const reason = document.getElementById("reason");
 
     const nameError = document.getElementById("nameError");
     const emailError = document.getElementById("emailError");
     const messageError = document.getElementById("messageError");
+    const reasonError = document.getElementById("reasonError");
 
     // RESET
-    [name, email, message].forEach(el => {
-      el.classList.remove("error-input");
+    [name, email, message, reason].forEach(el => {
+      if (el) el.classList.remove("error-input");
     });
 
     nameError.textContent = "";
     emailError.textContent = "";
     messageError.textContent = "";
+    reasonError.textContent = "";
 
     // VALIDATION
     if (name.value.trim() === "") {
@@ -361,6 +378,12 @@ window.addEventListener("componentsLoaded", () => {
       isValid = false;
     }
 
+    if (reason.value === "") {
+      reasonError.textContent = "Please select a service";
+      reason.classList.add("error-input");
+      isValid = false;
+    }
+
     if (message.value.trim() === "") {
       messageError.textContent = "Please enter your message";
       message.classList.add("error-input");
@@ -371,23 +394,26 @@ window.addEventListener("componentsLoaded", () => {
 
     const btn = form.querySelector("button");
     btn.disabled = true;
-    btn.textContent = "Sending...";
+    btn.innerHTML = "Sending <span class='spinner'></span>";
 
-    // emailjs.send("service_ha0zfah", "template_ly32lim", {
-    //   name: name.value,
-    //   email: email.value,
-    //   subject: subject.value,
-    //   message: message.value
-    // })
-    emailjs.send("service_yowfb68", "template_c481o32", {
+    emailjs.send("service_ha0zfah", "template_ly32lim", {
       name: name.value,
       email: email.value,
+      reason: reason.value,
       subject: subject.value,
       message: message.value
     })
+    // emailjs.send("service_yowfb68", "template_c481o32", {
+    //   name: name.value,
+    //   email: email.value,
+    //   reason: reason.value,
+    //   subject: subject.value,
+    //   message: message.value
+    // })
     .then(() => {
       alert("Message sent successfully!");
       form.reset();
+      reason.classList.remove("selected");
     })
     
     .catch((err) => {
@@ -401,4 +427,49 @@ window.addEventListener("componentsLoaded", () => {
 
   });
 
+});
+
+
+
+// HERO TEXT
+gsap.from(".about-title", {
+  y: 50,
+  opacity: 0,
+  duration: 1
+});
+
+gsap.from(".about-desc", {
+  y: 30,
+  opacity: 0,
+  delay: 0.2
+});
+
+// STATS
+gsap.from(".about-stats div", {
+  y: 20,
+  opacity: 0,
+  stagger: 0.2,
+  delay: 0.3
+});
+
+// GLOBE FLOAT
+gsap.to(".globe", {
+  y: -20,
+  repeat: -1,
+  yoyo: true,
+  duration: 4,
+  ease: "sine.inOut"
+});
+
+// TIMELINE
+gsap.utils.toArray(".timeline-item").forEach((item) => {
+  gsap.from(item, {
+    opacity: 0,
+    y: 50,
+    duration: 0.8,
+    scrollTrigger: {
+      trigger: item,
+      start: "top 85%"
+    }
+  });
 });
