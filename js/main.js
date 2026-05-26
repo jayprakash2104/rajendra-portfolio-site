@@ -248,13 +248,13 @@ function initNavbar() {
 
     document.body.style.overflow =
       nav.classList.contains("active") ? "hidden" : "auto";
-  document.body.classList.toggle("menu-open", nav.classList.contains("active"));
+    document.body.classList.toggle("menu-open", nav.classList.contains("active"));
 
   });
 
 
 
-}gsap.from(".contact-left .badge", {
+} gsap.from(".contact-left .badge", {
   y: 20,
   opacity: 0,
   duration: 0.6,
@@ -310,34 +310,68 @@ gsap.from(".contact-left .accent", {
 const reason = document.getElementById("reason");
 if (reason) {
   console.log("Reason select found, adding change listener");
-    reason.addEventListener("change", function () {
-      if (this.value !== "") {
-        this.classList.add("selected");
-      } else {
-        this.classList.remove("selected");
-      }
+  reason.addEventListener("change", function () {
+    if (this.value !== "") {
+      this.classList.add("selected");
+    } else {
+      this.classList.remove("selected");
+    }
+  });
+}
+
+function showToast(message, type = "success") {
+  const container = document.getElementById("toast-container");
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+
+  toast.innerHTML = `
+    <span class="toast-icon">
+      ${type === "success" ? "✔" : "✕"}
+    </span>
+    <span>${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  // GSAP animation
+  gsap.to(toast, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.4,
+    ease: "power3.out"
+  });
+
+  // auto remove
+  setTimeout(() => {
+    gsap.to(toast, {
+      opacity: 0,
+      y: -20,
+      scale: 0.95,
+      duration: 0.3,
+      onComplete: () => toast.remove()
     });
-  }
+  }, 3000);
+}
 
 
 window.addEventListener("componentsLoaded", () => {
 
-  // ✅ INIT EMAILJS SAFELY
   if (window.emailjs) {
     emailjs.init({
-      // publicKey: "kqWvRTv5kjhFqNabg"
-      publicKey: "SJduZE3sdYqaQywdp"
+      publicKey: "kqWvRTv5kjhFqNabg"
+      // publicKey: "SJduZE3sdYqaQywdp"
     });
   } else {
     console.error("EmailJS not loaded");
     return;
   }
 
-  // ✅ SAFE FORM SELECT
   const form = document.getElementById("contactForm");
-  if (!form) return; // 🔥 THIS LINE FIXES EVERYTHING
+  if (!form) return;
 
-  form.addEventListener("submit", function(e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
 
     let isValid = true;
@@ -396,34 +430,34 @@ window.addEventListener("componentsLoaded", () => {
     btn.disabled = true;
     btn.innerHTML = "Sending <span class='spinner'></span>";
 
-    emailjs.send("service_ha0zfah", "template_ly32lim", {
-      name: name.value,
-      email: email.value,
-      reason: reason.value,
-      subject: subject.value,
-      message: message.value
-    })
-    // emailjs.send("service_yowfb68", "template_c481o32", {
+    // emailjs.send("service_ha0zfah", "template_ly32lim", {
     //   name: name.value,
     //   email: email.value,
     //   reason: reason.value,
     //   subject: subject.value,
     //   message: message.value
     // })
-    .then(() => {
-      alert("Message sent successfully!");
-      form.reset();
-      reason.classList.remove("selected");
+    emailjs.send("service_yowfb68", "template_c481o32", {
+      name: name.value,
+      email: email.value,
+      reason: reason.value,
+      subject: subject.value,
+      message: message.value
     })
-    
-    .catch((err) => {
-      console.error(err);
-      alert("Failed to send message");
-    })
-    .finally(() => {
-      btn.disabled = false;
-      btn.innerHTML = 'Send a Message <span class="arrow-icon">→</span>';
-    });
+      .then(() => {
+        showToast("Message sent successfully!", "success");
+        form.reset();
+        reason.classList.remove("selected");
+      })
+
+      .catch((err) => {
+        console.error(err);
+        showToast("Failed to send message", "error");
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = 'Send a Message <span class="arrow-icon">→</span>';
+      });
 
   });
 
@@ -432,27 +466,116 @@ window.addEventListener("componentsLoaded", () => {
 // GSAP
 window.addEventListener("componentsLoaded", () => {
 
-gsap.from(".about-title", {
-  y: 60,
-  opacity: 0,
-  duration: 1
-});
+  gsap.from(".about-title", {
+    y: 60,
+    opacity: 0,
+    duration: 1
+  });
 
-gsap.from(".about-desc", {
-  y: 40,
-  opacity: 0,
-  delay: 0.2
-});
+  gsap.from(".about-desc", {
+    y: 40,
+    opacity: 0,
+    delay: 0.2
+  });
 
-gsap.from(".stat-card", {
-  y: 30,
-  opacity: 1,
-  stagger: 0.15,
-  delay: 0.4
-});
+  gsap.from(".stat-card", {
+    y: 30,
+    opacity: 1,
+    stagger: 0.15,
+    delay: 0.4
+  });
 
 
+  gsap.utils.toArray(".company-card").forEach((card, i) => {
+    gsap.fromTo(card,
+      {
+        opacity: 0,
+        x: i % 2 === 0 ? -80 : 80
+      },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        }
+      }
+    );
+  });
 
+  gsap.fromTo(".service-card",
+    {
+      opacity: 0,
+      y: 60,
+      filter: "blur(3px)"
+    },
+    {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      duration: 0.1,
+      stagger: 0.2,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".services-grid",
+        start: "top 80%"
+      }
+    }
+  );
+
+  const cards = document.querySelectorAll(".service-card");
+
+  cards.forEach(card => {
+
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // 🔥 3D tilt (safe values)
+      const rotateX = ((y - centerY) / centerY) * -6;
+      const rotateY = ((x - centerX) / centerX) * 6;
+
+      // 🧲 magnetic shift
+      const moveX = (x - centerX) * 0.05;
+      const moveY = (y - centerY) * 0.05;
+
+      card.style.transform = `
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+        translateX(${moveX}px)
+        translateY(${moveY}px)
+      `;
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = `
+        rotateX(0deg)
+        rotateY(0deg)
+        translateX(0px)
+        translateY(0px)
+      `;
+    });
+
+  });
+
+  gsap.from(".compare-col", {
+    opacity: 0,
+    y: 50,
+    duration: 1,
+    stagger: 0.2,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: ".compare-grid",
+      start: "top 80%"
+    }
+  });
 
 });
 
