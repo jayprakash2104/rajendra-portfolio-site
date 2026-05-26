@@ -24,6 +24,9 @@
 .flex {
   display: flex;
 }
+.justify-content-center {
+  justify-content: center;
+}
 
 .gap-3 {
   gap: 15px;
@@ -31,4 +34,8 @@
 
 .mt-4 {
   margin-top: 20px;
+}
+
+.text-center {
+  text-align: center;
 }

@@ -429,47 +429,31 @@ window.addEventListener("componentsLoaded", () => {
 
 });
 
+// GSAP
+window.addEventListener("componentsLoaded", () => {
 
-
-// HERO TEXT
 gsap.from(".about-title", {
-  y: 50,
+  y: 60,
   opacity: 0,
   duration: 1
 });
 
 gsap.from(".about-desc", {
-  y: 30,
+  y: 40,
   opacity: 0,
   delay: 0.2
 });
 
-// STATS
-gsap.from(".about-stats div", {
-  y: 20,
-  opacity: 0,
-  stagger: 0.2,
-  delay: 0.3
+gsap.from(".stat-card", {
+  y: 30,
+  opacity: 1,
+  stagger: 0.15,
+  delay: 0.4
 });
 
-// GLOBE FLOAT
-gsap.to(".globe", {
-  y: -20,
-  repeat: -1,
-  yoyo: true,
-  duration: 4,
-  ease: "sine.inOut"
+
+
+
 });
 
-// TIMELINE
-gsap.utils.toArray(".timeline-item").forEach((item) => {
-  gsap.from(item, {
-    opacity: 0,
-    y: 50,
-    duration: 0.8,
-    scrollTrigger: {
-      trigger: item,
-      start: "top 85%"
-    }
-  });
-});
+
