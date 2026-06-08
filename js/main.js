@@ -284,12 +284,12 @@ gsap.from(".contact-info .info", {
   delay: 0.3
 });
 
-gsap.from(".arrow-btn", {
-  y: 20,
-  opacity: 0,
-  duration: 0.6,
-  delay: 0.5
-});
+// gsap.from(".arrow-btn", {
+//   y: 20,
+//   opacity: 0,
+//   duration: 0.6,
+//   delay: 0.5
+// });
 
 gsap.from(".contact-map", {
   x: 80,
