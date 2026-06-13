@@ -358,6 +358,9 @@ function showToast(message, type = "success") {
 
 window.addEventListener("componentsLoaded", () => {
 
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+
   if (window.emailjs) {
     emailjs.init({
       publicKey: "kqWvRTv5kjhFqNabg"
